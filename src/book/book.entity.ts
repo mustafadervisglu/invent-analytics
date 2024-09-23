@@ -3,7 +3,7 @@ import { User } from '../user/user.entity';
 
 @Entity('books')
 export class Book {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('increment')
   id: number;
 
   @Column()
@@ -12,9 +12,9 @@ export class Book {
   @Column({ nullable: true })
   userScore?: number;
 
-  @Column({ type: 'enum', enum: ['past', 'present'] })
-  status: 'past' | 'present';
+  @ManyToOne(() => User, (user) => user.pastBooks)
+  pastUser: User;
 
-  @ManyToOne(() => User, (user) => user.books)
-  user: User;
+  @ManyToOne(() => User, (user) => user.presentBooks)
+  presentUser: User;
 }
