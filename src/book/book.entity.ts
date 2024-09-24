@@ -1,4 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany, AfterLoad } from 'typeorm';
+import { Exclude } from 'class-transformer';
 import { Borrowing } from 'src/borrowings/borrowings.entity';
 
 @Entity()
@@ -16,16 +17,21 @@ export class Book {
   totalBorrows: number;
 
   @Column({ default: 0 })
-  ratingsCount: number;
+  scoreCounts: number;
 
   @Column({ default: 0 })
-  ratingsSum: number;
+  scoreSum: number;
 
-  averageRating: number = -1;
+  @Exclude()
+  score: string = '-1';
 
   @AfterLoad()
-  calculateAverageRating() {
-    this.averageRating =
-      this.ratingsCount > 0 ? this.ratingsSum / this.ratingsCount : -1;
+  calculateScore() {
+    if (this.scoreCounts > 0) {
+      const avg = this.scoreSum / this.scoreCounts;
+      this.score = avg.toFixed(2);
+    } else {
+      this.score = '-1';
+    }
   }
 }

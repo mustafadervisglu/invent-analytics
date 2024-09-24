@@ -6,9 +6,8 @@ import { Book } from 'src/book/book.entity';
 import { Borrowing } from 'src/borrowings/borrowings.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Book,Borrowing])],
-  providers: [BookService],
+  imports: [TypeOrmModule.forFeature([Book, Borrowing])],
   controllers: [BookController],
+  providers: [BookService],
 })
-export class BookModule {
-}
+export class BookModule {}

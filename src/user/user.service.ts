@@ -30,39 +30,39 @@ export class UserService {
     try {
       return this.userRepository.find();
     } catch(e) {
-      return e;
+      throw e;
     }
   }
 
-  async getUserById(id: number): Promise<UserData> {
+  async getUserById(id: number): Promise<any> {
     try {
       const user = await this.userRepository.findOne({ where: { id } });
 
       if(!user) {
-        throw new NotFoundException('User not found');
+        throw new NotFoundException('Kullanıcı bulunamadı');
       }
 
       const [pastBorrowings, presentBorrowings] = await Promise.all([
         this.borrowingsRepository.createQueryBuilder('borrowing')
           .leftJoinAndSelect('borrowing.book', 'book')
-          .where('borrowing.userId = :userId', { userId: id })
+          .leftJoin('borrowing.user', 'user')
+          .where('user.id = :userId', { userId: id })
           .andWhere('borrowing.returnedAt IS NOT NULL')
-          .select(['book.name', 'borrowing.rating'])
           .getMany(),
         this.borrowingsRepository.createQueryBuilder('borrowing')
           .leftJoinAndSelect('borrowing.book', 'book')
-          .where('borrowing.userId = :userId', { userId: id })
+          .leftJoin('borrowing.user', 'user')
+          .where('user.id = :userId', { userId: id })
           .andWhere('borrowing.returnedAt IS NULL')
-          .select(['book.name'])
           .getMany(),
       ]);
 
-      const past = pastBorrowings.map(b => ({
+      const past = pastBorrowings.map((b) => ({
         name: b.book.name,
         userScore: b.rating,
       }));
 
-      const present = presentBorrowings.map(b => ({
+      const present = presentBorrowings.map((b) => ({
         name: b.book.name,
       }));
 
@@ -79,9 +79,8 @@ export class UserService {
       if(error instanceof NotFoundException) {
         throw error;
       } else {
-        throw new InternalServerErrorException('Something went wrong');
+        throw new InternalServerErrorException('Kullanıcı getirilirken bir hata oluştu');
       }
     }
   }
-
 }
