@@ -7,6 +7,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { configValidationSchema } from 'src/helper/config.schema';
 import { DataSource } from 'typeorm';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { BorrowingsModule } from './borrowings/borrowings.module';
 
 @Module({
   imports: [
@@ -31,7 +32,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
       }),
     }),
-    UserModule, BookModule],
+    UserModule, BookModule, BorrowingsModule],
   controllers: [AppController],
   providers: [AppService],
 })

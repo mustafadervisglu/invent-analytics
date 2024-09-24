@@ -1,17 +1,14 @@
-import { Entity, PrimaryGeneratedColumn, BaseEntity, Column, OneToMany } from 'typeorm';
-import { Book } from 'src/book/book.entity';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Borrowing } from 'src/borrowings/borrowings.entity';
 
-@Entity('users')
+@Entity()
 export class User {
-  @PrimaryGeneratedColumn('increment')
+  @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
   name: string;
 
-  @OneToMany(() => Book, (book) => book.pastUser)
-  pastBooks: Book[];
-
-  @OneToMany(() => Book, (book) => book.presentUser)
-  presentBooks: Book[];
+  @OneToMany(() => Borrowing, (borrowing) => borrowing.user)
+  borrowings: Borrowing[];
 }

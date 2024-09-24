@@ -1,20 +1,14 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
-import { User } from '../user/user.entity';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Borrowing } from 'src/borrowings/borrowings.entity';
 
-@Entity('books')
+@Entity()
 export class Book {
-  @PrimaryGeneratedColumn('increment')
+  @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
   name: string;
 
-  @Column({ nullable: true })
-  userScore?: number;
-
-  @ManyToOne(() => User, (user) => user.pastBooks)
-  pastUser: User;
-
-  @ManyToOne(() => User, (user) => user.presentBooks)
-  presentUser: User;
+  @OneToMany(() => Borrowing, (borrowing) => borrowing.book)
+  borrowings: Borrowing[];
 }
